@@ -39,7 +39,13 @@ body {
 }
 
 .input_video {
-    display: none;
+    /* En celulares IOS/Android si se pone "display: none", la cámara se apaga o se congela */
+    position: absolute; 
+    opacity: 0;
+    width: 1px;
+    height: 1px;
+    z-index: -1000;
+    pointer-events: none;
 }
 
 .output_canvas {

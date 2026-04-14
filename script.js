@@ -170,27 +170,49 @@ function onResults(results) {
     gestureOverlay.innerText = gestureText;
 }
 
-// Inicialización de la Cámara Mejorada para Dispositivos Móviles
-const camera = new Camera(videoElement, {
-    onFrame: async () => {
-        // En móviles, procesar cada frame demora, esto asegura que el video coincida
+// Bucle manual súper optimizado para móviles (evita que se traben los frames)
+let isProcessingFrame = false;
+async function processVideo() {
+    if (!isRunning) return;
+    
+    // Solo enviamos a la IA si terminó de procesar el frame anterior, así no "explotamos" la RAM de iPhone
+    if (videoElement.readyState >= 2 && !isProcessingFrame) {
+        isProcessingFrame = true;
         await hands.send({ image: videoElement });
-    },
-    width: 480,  // Redujimos la resolución al doble para que procese rapidísimo
-    height: 360  // (No afecta visualmente porque el CSS lo estira al 100% de la pantalla)
-});
+        isProcessingFrame = false;
+    }
+    // Repetir el bucle
+    requestAnimationFrame(processVideo);
+}
 
-startBtn.addEventListener('click', () => {
+startBtn.addEventListener('click', async () => {
     if (!isRunning) {
-        statusText.innerText = "Iniciando magia... dale permisos a la cámara 🎥";
-        camera.start().then(() => {
-            isRunning = true;
-            statusText.innerText = "¡Listo! Muéstrale tus manos a la cámara.";
-            startBtn.innerText = "Apagar Sorpresa";
-        }).catch(e => {
-            statusText.innerText = "Error con la cámara. Intenta reiniciar el navegador.";
-            alert("Error: " + e + "\n\nAsegúrate de que otra aplicación (como Zoom o Teams) no esté usando la cámara.");
-        });
+        statusText.innerText = "Iniciando cámara nativa... 🎥";
+        try {
+            // Reemplazamos la librería "Camera" por el código nativo universal del navegador (soluciona Android de raíz)
+            const stream = await navigator.mediaDevices.getUserMedia({
+                video: {
+                    facingMode: 'user',
+                    width: { ideal: 320 }, // Resolución ultrabaja para máxima velocidad
+                    height: { ideal: 240 } // (El Canvas de la pantalla la estira sin problema)
+                },
+                audio: false
+            });
+            
+            videoElement.srcObject = stream;
+            videoElement.onloadedmetadata = () => {
+                videoElement.play();
+                isRunning = true;
+                statusText.innerText = "¡Listo! Muéstrale tus manos a la cámara.";
+                startBtn.innerText = "Apagar Sorpresa";
+                
+                // Iniciar el procesamiento constante a la mayor velocidad que aguante el celular
+                requestAnimationFrame(processVideo);
+            };
+        } catch (e) {
+            statusText.innerText = "No se pudo acceder a la cámara.";
+            alert("Error: " + e.message + "\n\nAsegúrate de estar en Safari o Google Chrome y darle a 'Permitir'.");
+        }
     } else {
         location.reload(); // Forma sencilla de apagar
     }
