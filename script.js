@@ -38,9 +38,9 @@ const hands = new Hands({
 
 hands.setOptions({
     maxNumHands: 1,
-    modelComplexity: 1,
-    minDetectionConfidence: 0.6,
-    minTrackingConfidence: 0.6
+    modelComplexity: 0, // REDUCIDO a 0: CRÍTICO para que no se trabe en celulares
+    minDetectionConfidence: 0.5, // Bajado un poco para que sea más rápido
+    minTrackingConfidence: 0.5
 });
 
 hands.onResults(onResults);
@@ -123,12 +123,15 @@ function onResults(results) {
         // 3. GESTO: Mano Abierta (5 dedos) -> Álbum Mágico
         else if (analisis.totalDedos === 5) {
             gestureText = "Mano Abierta ✋ (Álbum Mágico)";
-            photoDisplay.src = photos[currentPhotoIndex];
+            
+            if (photoDisplay.getAttribute('src') !== photos[currentPhotoIndex]) {
+                photoDisplay.src = photos[currentPhotoIndex];
+            }
             photoDisplay.classList.add('visible');
 
             // --- Lógica de Swipe Simple ---
             // Usamos la posición X del nudillo central (punto 9) para ver si mueve la mano a los lados
-            let currentCenterX = lms[9].x * canvasElement.width;
+            let currentCenterX = landmarks[9].x * canvasElement.width;
             
             if (lastHandCenter !== null && !swipeTimeout) {
                 let dx = currentCenterX - lastHandCenter; 
@@ -167,13 +170,14 @@ function onResults(results) {
     gestureOverlay.innerText = gestureText;
 }
 
-// Inicialización de la Cámara
+// Inicialización de la Cámara Mejorada para Dispositivos Móviles
 const camera = new Camera(videoElement, {
     onFrame: async () => {
+        // En móviles, procesar cada frame demora, esto asegura que el video coincida
         await hands.send({ image: videoElement });
     },
-    width: 640,
-    height: 480
+    width: 480,  // Redujimos la resolución al doble para que procese rapidísimo
+    height: 360  // (No afecta visualmente porque el CSS lo estira al 100% de la pantalla)
 });
 
 startBtn.addEventListener('click', () => {
