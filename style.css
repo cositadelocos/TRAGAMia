@@ -1,0 +1,151 @@
+body {
+    font-family: 'Georgia', serif;
+    background-color: #000; /* Fondo negro para que parezca una película */
+    color: #ff4d4d;
+    min-height: 100vh;
+    margin: 0;
+    overflow: hidden; /* Evitar que salgan barras de navegación */
+}
+
+/* El texto de la esquina "hola ori..." */
+#corner-text {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    color: white;
+    font-size: 1.5em;
+    font-weight: bold;
+    text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.8), 0 0 20px #ff4d4d;
+    z-index: 999; /* Sobre todo lo demás */
+}
+
+.container {
+    width: 100vw;
+    height: 100vh;
+    position: relative;
+    overflow: hidden;
+}
+
+.video-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: #000;
+    border-radius: 0; /* Quitamos bordes curvos */
+    box-shadow: none; /* Quitamos la sombra */
+    margin: 0;
+}
+
+.input_video {
+    display: none;
+}
+
+.output_canvas {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Esto hará que el video ocupe toda la pantalla sin distorsionarse */
+    /* Quitamos el transform de CSS para evitar doblereflejarse (el script JS ya lo hace) */
+}
+
+/* Botones sobre el video */
+.controls-overlay {
+    position: absolute;
+    bottom: 80px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 15px;
+    z-index: 50;
+}
+
+#status-overlay {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    color: white;
+    font-size: 1.2em;
+    background: rgba(0,0,0,0.5);
+    padding: 10px 15px;
+    border-radius: 10px;
+    z-index: 50;
+    text-shadow: 1px 1px 2px black;
+}
+
+#gesture-overlay {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(255, 255, 255, 0.8);
+    padding: 10px 25px;
+    border-radius: 25px;
+    font-size: 1.5em;
+    font-weight: bold;
+    color: #ff3333;
+    pointer-events: none;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.controls {
+    margin-top: 25px;
+}
+
+button {
+    padding: 12px 30px;
+    font-size: 1.2em;
+    background-color: #ff4d4d;
+    color: white;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5); /* Sombra estándar en vez de roja */
+    backdrop-filter: blur(5px);
+}
+
+button:hover {
+    background-color: #ff1a1a;
+    transform: scale(1.05);
+}
+
+/* Clases para efectos de fotos y mensajes */
+.hidden {
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.5s ease-in-out;
+}
+
+.visible {
+    opacity: 1 !important;
+}
+
+#heart-message {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(255, 255, 255, 0.9);
+    padding: 20px 40px;
+    border-radius: 15px;
+    font-size: 3em;
+    font-weight: bold;
+    color: #ff1a1a;
+    box-shadow: 0 0 30px rgba(255, 26, 26, 0.5);
+    z-index: 10;
+}
+
+#photo-display {
+    position: absolute;
+    top: 10%;
+    left: 50%;
+    transform: translateX(-50%);
+    max-width: 80%;
+    max-height: 80%;
+    border: 5px solid white;
+    border-radius: 10px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    z-index: 5;
+    object-fit: cover;
+}

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Para Ti ❤️ - Gestos</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- MediaPipe Hands -->
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/control_utils/control_utils.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js" crossorigin="anonymous"></script>
+</head>
+<body>
+    <!-- Texto en la esquina -->
+    <div id="corner-text">hola ori, esto es para ti</div>
+
+    <div class="container">
+        <!-- Ocultamos el título porque ahora será pantalla completa -->
+        <h1 style="display: none;">Una sorpresa con gestos para ti 💖</h1>
+        
+        <div class="video-container">
+            <video class="input_video" autoplay playsinline></video>
+            <canvas class="output_canvas" width="640px" height="480px"></canvas>
+            <div id="gesture-overlay">Haz un gesto...</div>
+            
+            <div id="status-overlay">Cargando la magia...</div>
+
+            <!-- Botones superpuestos en la cámara -->
+            <div class="controls-overlay">
+                <button id="startBtn">Iniciar Cámara</button>
+                <button id="fullscreenBtn">Pantalla Completa</button>
+            </div>
+
+            <!-- Elementos visuales superpuestos -->
+            <div id="heart-message" class="hidden">hola traga mia</div>
+            <img id="photo-display" class="hidden" src="" alt="Nuestra foto">
+        </div>
+    </div>
+
+    <!-- Elementos ocultos para usar como galería/música -->
+    <div style="display: none;">
+        <!-- Reemplaza estos archivos con tus propias fotos y música -->
+        <img id="foto1" src="foto1.jpeg">
+        <img id="foto2" src="foto2.jpeg">
+        <img id="foto3" src="foto3.jpeg">
+        <audio id="audioMusica" src="musica.mp3" loop></audio>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
