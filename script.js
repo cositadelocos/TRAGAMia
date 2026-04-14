@@ -188,6 +188,15 @@ async function processVideo() {
 startBtn.addEventListener('click', async () => {
     if (!isRunning) {
         statusText.innerText = "Iniciando cámara nativa... 🎥";
+        
+        // --- TRUCO CLAVE PARA IOS / ANDROID ---
+        // Desbloquear el audio exigiendo "play" durante el evento del clic del usuario.
+        // Si no hacemos esto, el celular bloqueará la música cuando hagas el gesto ("Autoplay Policy").
+        audioMusica.play().then(() => {
+            audioMusica.pause();
+            audioMusica.currentTime = 0;
+        }).catch(err => console.log("Audiounlock no necesario o falló: ", err));
+
         try {
             // Reemplazamos la librería "Camera" por el código nativo universal del navegador (soluciona Android de raíz)
             const stream = await navigator.mediaDevices.getUserMedia({
